@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainfall Prediction System</title>
+    <link rel="stylesheet" href="{% static 'homepage/css/styles.css' %}">
+</head>
+<body>
+    <header class="header">
+        <h1>Rainfall Prediction System</h1>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="/user/">User Dashboard</a></li>
+                <li><a href="/admin_panel/">Admin Panel</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <img src="{% static 'homepage/images/rainfall.jpg' %}" alt="Rainfall" class="hero-image">
+            <div class="hero-text">
+                <h2>Stay Prepared, Stay Safe</h2>
+                <p>Accurate rainfall predictions and alerts at your fingertips.</p>
+            </div>
+        </section>
+
+        <section class="explore-section">
+            <h2>Explore Our Services</h2>
+            <div class="cards">
+                <div class="card">
+                    <img src="{% static 'homepage/images/user.jpg' %}" alt="User Dashboard">
+                    <h3>User Dashboard</h3>
+                    <p>Access personalized rainfall alerts and history.</p>
+                    <a href="/user/" class="button">Explore User Dashboard</a>
+                </div>
+                <div class="card">
+                    <img src="{% static 'homepage/images/admin.jpg' %}" alt="Admin Panel">
+                    <h3>Admin Panel</h3>
+                    <p>Manage users, rainfall data, and alerts effectively.</p>
+                    <a href="/admin_panel/" class="button">Go to Admin Panel</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Rainfall Prediction System | Designed by Stella Mariya Roy</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the Admin Dashboard!</h1>
+</body>
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'admin_panel/css/styles.css' %}">
+
+
+<h2>Alert Statistics</h2>
+<ul>
+    <li>Red Alerts: {{ alert_stats.Red }}</li>
+    <li>Orange Alerts: {{ alert_stats.Orange }}</li>
+    <li>Yellow Alerts: {{ alert_stats.Yellow }}</li>
+    <li>Green Alerts: {{ alert_stats.Green }}</li>
+</ul>
+
+</html>

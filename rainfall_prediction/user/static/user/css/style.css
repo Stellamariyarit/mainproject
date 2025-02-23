@@ -1,0 +1,27 @@
+.alert-red {
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.alert-orange {
+    background-color: #FF9800;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.alert-yellow {
+    background-color: #FFEB3B;
+    color: black;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.alert-green {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+}

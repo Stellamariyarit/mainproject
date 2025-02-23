@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the User Dashboard!</h1>
+</body>
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}">
+
+
+
+<h2>Latest Prediction</h2>
+<div class="alert alert-{{ latest_alert.status|lower }}">
+    Status: {{ latest_alert.status }}
+</div>
+
+<h3>Alert History</h3>
+<ul>
+    {% for alert in alerts %}
+    <li>{{ alert.date }} - {{ alert.status }}</li>
+    {% endfor %}
+</ul>
+
+
+</html>
