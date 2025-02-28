@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background:#ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .registration-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+        }
+
+        .registration-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .registration-container label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        .registration-container input[type="text"],
+        .registration-container input[type="email"],
+        .registration-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .registration-container button {
+            width: 100%;
+            padding: 10px;
+            background-color:rgba(37, 1, 23, 0.27);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .registration-container button:hover {
+            background-color:rgb(24, 2, 26);
+        }
+
+        .registration-container p {
+            margin-top: 10px;
+            color: #777;
+        }
+
+        .registration-container a {
+            color:rgb(31, 4, 2);
+            text-decoration: none;
+        }
+
+        .registration-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <h2>User Registration</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label>{{ user_form.username.label }}</label>
+            {{ user_form.username }}
+            
+            <label>{{ user_form.email.label }}</label>
+            {{ user_form.email }}
+            
+            <label>{{ profile_form.phone_number.label }}</label>
+            {{ profile_form.phone_number }}
+            
+            <label>{{ user_form.password.label }}</label>
+            {{ user_form.password }}
+            
+            <label>{{ user_form.confirm_password.label }}</label>
+            {{ user_form.confirm_password }}
+            
+            <button type="submit">Register</button>
+            <p>Already registered? <a href="{% url 'login' %}">Login</a></p>
+            <p><a href="{% url 'home' %}">Back to Home</a></p>
+
+
+        </form>
+    </div>
+</body>
+</html>

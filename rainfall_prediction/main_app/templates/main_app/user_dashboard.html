@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #acb6e5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .prediction {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            margin: 10px 0;
+        }
+
+        .alert.green { background: #4caf50; }
+        .alert.yellow { background: #ffeb3b; color: #333; }
+        .alert.orange { background: #ff9800; }
+        .alert.red { background: #f44336; }
+
+        .logout-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .logout-button:hover {
+            background: #ff4d4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Welcome, {{ user.username }}!</h1>
+        
+        <div class="prediction">
+            <h2>Today's Rainfall Prediction</h2>
+            <p><strong>Rainfall Amount:</strong> {{ rainfall_amount }} mm</p>
+            <p><strong>Alert Level:</strong> {{ alert_level }}</p>
+            
+            {% if alert_level == "Green" %}
+            <div class="alert green">No Significant Rainfall. Safe to Proceed.</div>
+            {% elif alert_level == "Yellow" %}
+            <div class="alert yellow">Moderate Rainfall Expected. Be Cautious.</div>
+            {% elif alert_level == "Orange" %}
+            <div class="alert orange">Heavy Rainfall Expected. Stay Alert.</div>
+            {% elif alert_level == "Red" %}
+            <div class="alert red">Severe Rainfall Warning! Take Necessary Precautions.</div>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+    </div>
+</body>
+</html>

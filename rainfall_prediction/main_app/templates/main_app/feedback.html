@@ -1,0 +1,109 @@
+{% extends "main_app/base.html" %}
+
+{% comment %} {% extends "main_app/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Feedback - Rainfall Prediction System{% endblock %}
+
+{% block content %}
+    <h2>Feedback</h2>
+    <p>We value your feedback. Please let us know how we can improve our system.</p>
+    
+    <!-- Feedback Form -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+
+    <!-- Messages Display Block -->
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+{% extends "main_app/base.html" %}
+
+{% block title %}Feedback - Rainfall Prediction System{% endblock %}
+
+{% block content %}
+    <h2>Feedback</h2>
+    <p>We value your feedback. Please let us know how we can improve our system.</p>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="feedback" rows="5" cols="50" placeholder="Your feedback..."></textarea><br>
+        <button type="submit">Submit Feedback</button>
+    </form>
+{% endblock %}
+
+
+
+{% extends "main_app/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Feedback</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <!-- Messages Display Block -->
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %} {% endcomment %}
+
+
+
+
+
+
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Feedback Form</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+      </div>
+      <div class="mb-3">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+      </div>
+      <div class="mb-3">
+        {{ form.message.label_tag }}
+        {{ form.message }}
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+{% endblock %}

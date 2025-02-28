@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainfall Prediction System</title>
+    <style>
+        body {
+            background-image: url('/static/images/rainfall.jpg');
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding-top: 20%;
+        }
+        .menu {
+            margin-top: 20px;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Rainfall Prediction System</h1>
+    <p>Get accurate rainfall predictions and stay safe with timely alerts.</p>
+    <div class="menu">
+        <a href="{% url 'register' %}">New User Registration</a> |
+        <a href="{% url 'login' %}">Already Registered? Login</a> |
+        <a href="{% url 'about_us' %}">About Us</a> |
+        <a href="{% url 'feedback' %}">Feedback</a> |
+        <a href="{% url 'contact_us' %}">Contact Us</a>
+    </div>
+</body>
+</html>
