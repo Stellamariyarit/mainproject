@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_ff&dj$xkfzo31ywii81thxjtfu+8%o*wanj#jo@8ep5bc2ji5'
+SECRET_KEY = 'django-insecure-@z&$wwy6!f&g7&k776n-z4lsh2%n*-ppo_&9wzp(z95@we6+r#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,10 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user',           # User module
-    'admin_panel',    # Admin module
-    'homepage',
-    'rainfall_prediction',
+    'main_app',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +55,9 @@ ROOT_URLCONF = 'rainfall_prediction.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 'DIRS': [],
+                'DIRS': [BASE_DIR / 'main_app/templates'],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,7 +118,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -127,13 +126,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'main_app/static',
 ]
 
 
-AUTH_USER_MODEL = 'rainfall_prediction.CustomUser'
-# AUTH_USER_MODEL = 'rainfall_prediction.CustomUser'
-# AUTH_USER_MODEL = 'your_app.CustomUserModel'
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+from django.contrib.messages import constants as messages
+
+# Optional: Customize message tags to work with Bootstrap
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
