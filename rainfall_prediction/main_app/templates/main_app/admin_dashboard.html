@@ -1,2 +1,26 @@
-<h1>User Dashboard</h1>
-<p>Welcome to the User Dashboard.</p>
+<h1>Admin Dashboard</h1>
+<p>Welcome, Admin! You can send rainfall alerts to registered users.</p>
+
+<!-- Email Alert Button -->
+<button id="sendEmailAlertBtn">📧 Send Email Alert</button>
+
+<!-- SMS Alert Button (Optional for later) -->
+<button id="sendSmsAlertBtn">📱 Send SMS Alert</button>
+
+<script>
+  // Send Email Alert
+  document.getElementById("sendEmailAlertBtn").addEventListener("click", function () {
+    fetch("/send-email-alerts/", { method: "POST" })
+      .then(response => response.json())
+      .then(data => alert(data.message))
+      .catch(error => alert("Failed to send email alerts."));
+  });
+
+  // Send SMS Alert (Future)
+  document.getElementById("sendSmsAlertBtn").addEventListener("click", function () {
+    fetch("/send-sms-alerts/", { method: "POST" })
+      .then(response => response.json())
+      .then(data => alert(data.message))
+      .catch(error => alert("Failed to send SMS alerts."));
+  });
+</script>

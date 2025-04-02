@@ -1,0 +1,27 @@
+{% extends 'main_app/base.html' %}
+
+
+{% block content %}
+<h1>Rainfall Prediction for {{ city|default:"Unknown City" }}</h1>
+
+{% if temperature is not None and humidity is not None and pressure is not None and wind_speed is not None and description %}
+    <p><strong>Temperature:</strong> {{ temperature }}°C</p>
+    <p><strong>Humidity:</strong> {{ humidity }}%</p>
+    <p><strong>Pressure:</strong> {{ pressure }} hPa</p>
+    <p><strong>Wind Speed:</strong> {{ wind_speed }} m/s</p>
+    <p><strong>Weather Description:</strong> {{ description }}</p>
+{% else %}
+    <p>Weather data not available. Please try again.</p>
+{% endif %}
+
+<h2>Predictions</h2>
+{% if rf_prediction is not None and svm_prediction is not None and lstm_prediction is not None %}
+    <p><strong>Random Forest Prediction:</strong> {{ rf_prediction }}</p>
+    <p><strong>SVM Prediction:</strong> {{ svm_prediction }}</p>
+    <p><strong>LSTM Prediction:</strong> {{ lstm_prediction }}</p>
+{% else %}
+    <p>Prediction data not available.</p>
+{% endif %}
+
+<a href="{% url 'predict_rainfall' %}" class="btn btn-primary">Predict for Another City</a>
+{% endblock %}

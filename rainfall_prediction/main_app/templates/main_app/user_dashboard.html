@@ -1,92 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #74ebd5, #acb6e5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rainfall Prediction</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #e3f2fd;
+    }
+    .hero {
+      background-color: #2196f3;
+      color: white;
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .location-section, .result-section, .graph-section {
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: calc(100% - 120px);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-left: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #alertMessage {
+      padding: 12px;
+      border-radius: 4px;
+      color: white;
+    }
+    .green { background-color: #4caf50; }
+    .yellow { background-color: #ffeb3b; color: black; }
+    .orange { background-color: #ff9800; }
+    .red { background-color: #f44336; }
 
-        .dashboard-container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 80%;
-            max-width: 800px;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        .prediction {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .alert {
-            padding: 10px;
-            border-radius: 5px;
-            color: white;
-            margin: 10px 0;
-        }
-
-        .alert.green { background: #4caf50; }
-        .alert.yellow { background: #ffeb3b; color: #333; }
-        .alert.orange { background: #ff9800; }
-        .alert.red { background: #f44336; }
-
-        .logout-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #ff6f61;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-
-        .logout-button:hover {
-            background: #ff4d4d;
-        }
-    </style>
+    .logout-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #f44336;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .logout-button:hover {
+      background-color: #d32f2f;
+    }
+  </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Welcome, {{ user.username }}!</h1>
-        
-        <div class="prediction">
-            <h2>Today's Rainfall Prediction</h2>
-            <p><strong>Rainfall Amount:</strong> {{ rainfall_amount }} mm</p>
-            <p><strong>Alert Level:</strong> {{ alert_level }}</p>
-            
-            {% if alert_level == "Green" %}
-            <div class="alert green">No Significant Rainfall. Safe to Proceed.</div>
-            {% elif alert_level == "Yellow" %}
-            <div class="alert yellow">Moderate Rainfall Expected. Be Cautious.</div>
-            {% elif alert_level == "Orange" %}
-            <div class="alert orange">Heavy Rainfall Expected. Stay Alert.</div>
-            {% elif alert_level == "Red" %}
-            <div class="alert red">Severe Rainfall Warning! Take Necessary Precautions.</div>
-            {% endif %}
-        </div>
+  <div class="dashboard-container">
+    <h1>Welcome, {{ user.username }}!</h1>
+    <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+  </div>
 
-        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
-    </div>
+  {% include 'main_app/prediction_section.html' %}
+
+  <div class="result-section">
+    <h2>5-Day Rainfall Forecast</h2>
+    <table border="1">
+      <tr>
+        <th>Date</th>
+        <th>Predicted Rainfall (mm)</th>
+        <th>Alert Level</th>
+      </tr>
+      {% for forecast in forecast_data %}
+      <tr>
+        <td>{{ forecast.date }}</td>
+        <td>{{ forecast.predicted_rainfall|floatformat:2 }}</td>
+        <td>
+          <span style="color: 
+              {% if forecast.alert_level == 'Green' %}green
+              {% elif forecast.alert_level == 'Yellow' %}yellow
+              {% elif forecast.alert_level == 'Orange' %}orange
+              {% else %}red{% endif %};
+              font-weight: bold;">
+              {{ forecast.alert_level }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% comment %} <button id="predictButton">Get Prediction</button> {% endcomment %}
+
+  </div>
+{% comment %} 
+  <div class="graph-section">
+    <canvas id="rainfallChart"></canvas>
+  </div> {% endcomment %}
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const predictButton = document.getElementById("predictButton");
+  
+      if (predictButton) {
+        predictButton.addEventListener("click", function () {
+          fetch("{% url 'get_prediction' %}", {
+            method: "GET",
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+              "X-CSRFToken": "{{ csrf_token }}",
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // ✅ 1. Update Forecast Table
+              const tableBody = document.querySelector(".result-section table tbody");
+              tableBody.innerHTML = ""; // Clear old data
+  
+              data.forecast.forEach(forecast => {
+                const row = `
+                  <tr>
+                    <td>${forecast.date}</td>
+                    <td>${forecast.predicted_rainfall.toFixed(2)} mm</td>
+                    <td style="color: ${getAlertColor(forecast.alert_level)}; font-weight: bold;">
+                      ${forecast.alert_level}
+                    </td>
+                  </tr>
+                `;
+                tableBody.innerHTML += row;
+              });
+  
+              // ✅ 2. Update Alert Box
+              const alertMessage = document.getElementById("alertMessage");
+              alertMessage.innerHTML = `Alert Level: <strong>${data.alert_level}</strong>`;
+              alertMessage.className = getAlertClass(data.alert_level);
+  
+              // ✅ 3. Update Graph
+              updateGraph(data.forecast);
+            } else {
+              alert("Error: " + data.error);
+            }
+          })
+          .catch(error => console.error("Error fetching prediction:", error));
+        });
+      }
+  
+      // Function to get the alert color based on alert level
+      function getAlertColor(level) {
+        if (level === "Green") return "green";
+        if (level === "Yellow") return "yellow";
+        if (level === "Orange") return "orange";
+        return "red";
+      }
+  
+      // Function to get the alert CSS class
+      function getAlertClass(level) {
+        if (level === "Green") return "green";
+        if (level === "Yellow") return "yellow";
+        if (level === "Orange") return "orange";
+        return "red";
+      }
+  
+      // Function to update graph with new data
+      function updateGraph(forecastData) {
+        const ctx = document.getElementById("rainfallChart").getContext("2d");
+        const labels = forecastData.map(f => f.date);
+        const dataPoints = forecastData.map(f => f.predicted_rainfall);
+        const colors = forecastData.map(f => getAlertColor(f.alert_level));
+  
+        if (window.myChart) {
+          window.myChart.destroy(); // Remove old chart
+        }
+  
+        window.myChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Predicted Rainfall (mm)",
+              data: dataPoints,
+              backgroundColor: colors,
+              borderColor: "#000",
+              borderWidth: 1,
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+    });
+  </script>
+  
+
+
+
 </body>
 </html>
