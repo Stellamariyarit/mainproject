@@ -1,0 +1,60 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.bg-image {
+    width: 100%;
+    height: auto;
+    opacity: 0.7;
+}
+
+
+/* ===================================== */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+  }
+  
+  header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  nav a {
+    color: white;
+    margin-right: 15px;
+    text-decoration: none;
+  }
+  
+  .hero {
+    background: url('/static/main_app/images/rain-bg.jpg') no-repeat center center/cover;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+  }
+  
+  section {
+    margin: 40px;
+  }
+  
+  button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  canvas {
+    max-width: 100%;
+  }
+  
