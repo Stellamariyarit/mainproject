@@ -144,3 +144,20 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+
+
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Ensure to load environment variables from .env
+OPENWEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY')
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"  # Use Gmail SMTP
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "roystellamariya@gmail.com"
+EMAIL_HOST_PASSWORD = "ssjh qadg ycft sfda"  # Use an App Password if using Gmail
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
