@@ -111,6 +111,18 @@
     <canvas id="rainfallChart"></canvas>
   </div> {% endcomment %}
 
+  <h2>Your Alerts</h2>
+  {% if alerts %}
+      <ul>
+          {% for alert in alerts %}
+              <li><strong>{{ alert.alert_level }}</strong>: {{ alert.message }} ({{ alert.created_at }})</li>
+          {% endfor %}
+      </ul>
+  {% else %}
+      <p>No alerts available.</p>
+  {% endif %}
+  
+
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {

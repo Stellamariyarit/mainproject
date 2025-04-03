@@ -1,4 +1,4 @@
-<h1>Admin Dashboard</h1>
+{% comment %} <h1>Admin Dashboard</h1>
 <p>Welcome, Admin! You can send rainfall alerts to registered users.</p>
 
 <!-- Email Alert Button -->
@@ -8,19 +8,429 @@
 <button id="sendSmsAlertBtn">📱 Send SMS Alert</button>
 
 <script>
+  // Function to get CSRF token from cookies
+  function getCSRFToken() {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.startsWith('csrftoken=')) {
+                  cookieValue = cookie.substring('csrftoken='.length, cookie.length);
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+
   // Send Email Alert
   document.getElementById("sendEmailAlertBtn").addEventListener("click", function () {
-    fetch("/send-email-alerts/", { method: "POST" })
-      .then(response => response.json())
-      .then(data => alert(data.message))
-      .catch(error => alert("Failed to send email alerts."));
+    fetch("/send_email_alerts/", { 
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken() // Include CSRF token in headers
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => alert(data.message))
+    .catch(error => alert("Failed to send email alerts."));
   });
 
   // Send SMS Alert (Future)
   document.getElementById("sendSmsAlertBtn").addEventListener("click", function () {
-    fetch("/send-sms-alerts/", { method: "POST" })
-      .then(response => response.json())
-      .then(data => alert(data.message))
-      .catch(error => alert("Failed to send SMS alerts."));
+    fetch("/send-sms-alerts/", { 
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken() // Include CSRF token
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => alert(data.message))
+    .catch(error => alert("Failed to send SMS alerts."));
   });
 </script>
+
+
+
+
+
+
+ {% endcomment %}
+
+
+
+ {% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px gray;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .email-btn { background-color: #28a745; color: white; }
+        .sms-btn { background-color: #007bff; color: white; }
+        .email-btn:hover, .sms-btn:hover { opacity: 0.8; }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, Admin! You can send rainfall alerts to registered users.</p>
+
+        <button class="btn email-btn" id="sendEmailAlertBtn">📧 Send Email Alert</button>
+        <button class="btn sms-btn" id="sendSmsAlertBtn">📱 Send SMS Alert</button>
+
+        <h2>Users Alert History</h2>
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Alert Type</th>
+                <th>Date</th>
+            </tr>
+            <tr>
+                <td>John Doe</td>
+                <td>johndoe@example.com</td>
+                <td>Red Alert</td>
+                <td>April 3, 2025</td>
+            </tr>
+            <tr>
+                <td>Jane Smith</td>
+                <td>janesmith@example.com</td>
+                <td>Yellow Alert</td>
+                <td>April 3, 2025</td>
+            </tr>
+        </table>
+
+        <h2>Alert Statistics</h2>
+        <canvas id="alertChart"></canvas>
+    </div>
+
+    <script>
+        function getCSRFToken() {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith('csrftoken=')) {
+                        cookieValue = cookie.substring('csrftoken='.length, cookie.length);
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.getElementById("sendEmailAlertBtn").addEventListener("click", function () {
+            fetch("/send_email_alerts/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => alert("Failed to send email alerts."));
+        });
+
+        document.getElementById("sendSmsAlertBtn").addEventListener("click", function () {
+            fetch("/send-sms-alerts/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => alert("Failed to send SMS alerts."));
+        });
+
+        const ctx = document.getElementById('alertChart').getContext('2d');
+        const alertChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red Alert', 'Yellow Alert', 'Orange Alert', 'Green Alert'],
+                datasets: [{
+                    label: 'Number of Alerts Sent',
+                    data: [5, 8, 3, 12],
+                    backgroundColor: ['#dc3545', '#ffc107', '#fd7e14', '#28a745']
+                }]
+            }
+        });
+    </script>
+</body>
+</html> {% endcomment %}
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        #sendEmailAlertBtn { background-color: #28a745; }
+        #sendSmsAlertBtn { background-color: #dc3545; }
+        button:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <h1>Admin Dashboard</h1>
+    <p>Welcome, Admin! You can send rainfall alerts to registered users.</p>
+
+    <!-- Buttons -->
+    <button id="sendEmailAlertBtn">📧 Send Email Alert</button>
+    <button id="sendSmsAlertBtn">📱 Send SMS Alert</button>
+
+    <!-- Alerted Users Table -->
+    <h2>Users Who Received Alerts</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Alert Type</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="alertedUsersTableBody">
+            <!-- Updated user data will be inserted here dynamically -->
+        </tbody>
+    </table>
+{% comment %} 
+    <script>
+        // Function to get CSRF token from cookies
+        function getCSRFToken() {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith('csrftoken=')) {
+                        cookieValue = cookie.substring('csrftoken='.length, cookie.length);
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Function to fetch and update user details table
+        function updateUserTable() {
+            fetch("/get_alerted_users/")  // Endpoint to get updated alert details
+            .then(response => response.json())
+            .then(data => {
+                let tableBody = document.getElementById("alertedUsersTableBody");
+                tableBody.innerHTML = "";  // Clear existing data
+
+                data.users.forEach(user => {
+                    let row = `<tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.alert_type}</td>
+                        <td>${user.timestamp}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error("Failed to fetch alerted users:", error));
+        }
+
+        // Send Email Alert
+        document.getElementById("sendEmailAlertBtn").addEventListener("click", function () {
+            fetch("/send_email_alerts/", { 
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                updateUserTable();  // Refresh the user table after sending alerts
+            })
+            .catch(error => alert("Failed to send email alerts."));
+        });
+
+        // Send SMS Alert
+        document.getElementById("sendSmsAlertBtn").addEventListener("click", function () {
+            fetch("/send-sms-alerts/", { 
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                updateUserTable();  // Refresh the user table after sending SMS alerts
+            })
+            .catch(error => alert("Failed to send SMS alerts."));
+        });
+
+        // Load table on page load
+        updateUserTable();
+    </script> {% endcomment %}
+
+
+
+
+    <script>
+      function getCSRFToken() {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  if (cookie.startsWith('csrftoken=')) {
+                      cookieValue = cookie.substring('csrftoken='.length, cookie.length);
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+    
+      // Function to fetch and update the alerted users table
+      function updateUserTable() {
+          fetch("/get_alerted_users/")  // Ensure this URL is registered in urls.py
+          .then(response => response.json())
+          .then(data => {
+              let tableBody = document.getElementById("alertedUsersTableBody");
+              tableBody.innerHTML = "";  // Clear existing table data
+    
+              data.users.forEach(user => {
+                  let row = `<tr>
+                      <td>${user.name}</td>
+                      <td>${user.email}</td>
+                      <td>${user.alert_type}</td>
+                      <td>${user.timestamp}</td>
+                  </tr>`;
+                  tableBody.innerHTML += row;
+              });
+          })
+          .catch(error => console.error("Failed to fetch alerted users:", error));
+      }
+    
+      // Send Email Alert
+      document.getElementById("sendEmailAlertBtn").addEventListener("click", function () {
+          fetch("/send_email_alerts/", { 
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": getCSRFToken()
+              },
+              body: JSON.stringify({})
+          })
+          .then(response => response.json())
+          .then(data => {
+              alert(data.message);
+              updateUserTable();  // Refresh table after sending email alerts
+          })
+          .catch(error => alert("Failed to send email alerts."));
+      });
+    
+      // Load users when the page loads
+      document.addEventListener("DOMContentLoaded", updateUserTable);
+    </script>
+
+    
+
+
+
+</body>
+</html>
