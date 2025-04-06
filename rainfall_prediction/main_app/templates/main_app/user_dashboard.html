@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -103,13 +103,8 @@
       </tr>
       {% endfor %}
     </table>
-    {% comment %} <button id="predictButton">Get Prediction</button> {% endcomment %}
 
   </div>
-{% comment %} 
-  <div class="graph-section">
-    <canvas id="rainfallChart"></canvas>
-  </div> {% endcomment %}
 
   <h2>Your Alerts</h2>
   {% if alerts %}
@@ -222,8 +217,360 @@
     });
   </script>
   
+</body>
+</html> {% endcomment %}
 
 
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Dashboard | Rainfall Prediction</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    header {
+      background-color: #1976d2;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .logout-button {
+      background-color: #f44336;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .logout-button:hover {
+      background-color: #d32f2f;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background-color: white;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1976d2;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #e3f2fd;
+      color: #333;
+    }
+
+    .alert-badge {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .green { background-color: #4caf50; color: white; }
+    .yellow { background-color: #ffeb3b; color: #333; }
+    .orange { background-color: #ff9800; color: white; }
+    .red { background-color: #f44336; color: white; }
+
+    canvas {
+      max-width: 100%;
+      margin-top: 1.5rem;
+    }
+
+    ul {
+      padding-left: 1rem;
+    }
+
+    ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .no-alert {
+      font-style: italic;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      th, td {
+        text-align: left;
+      }
+
+      th {
+        background-color: transparent;
+      }
+
+      td {
+        padding-left: 50%;
+        position: relative;
+      }
+
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        color: #1976d2;
+      }
+    }
+
+
+    .result-section p {
+      font-size: 1.1rem;
+      margin: 0.5rem 0;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      background-color: #e3f2fd;
+      color: #333;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    #predictionResult {
+      font-weight: 600;
+      background-color: #bbdefb; /* Light blue for rainfall info */
+    }
+    
+    #alertMessage.green {
+      background-color: #c8e6c9;
+      color: #256029;
+      font-weight: bold;
+    }
+    
+    #alertMessage.yellow {
+      background-color: #fff9c4;
+      color: #8a6d1f;
+      font-weight: bold;
+    }
+    
+    #alertMessage.orange {
+      background-color: #ffe0b2;
+      color: #e65100;
+      font-weight: bold;
+    }
+    
+    #alertMessage.red {
+      background-color: #ffcdd2;
+      color: #b71c1c;
+      font-weight: bold;
+    }
+
+
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Welcome, {{ user.username }}!</h1>
+    <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+  </header>
+
+  <div class="container">
+
+  {% include 'main_app/prediction_section.html' %}
+
+    <div class="result-section">
+    {% comment %} <div class="card"> {% endcomment %}
+      <h2>5-Day Rainfall Forecast</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Predicted Rainfall (mm)</th>
+            <th>Alert Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for forecast in forecast_data %}
+          <tr>
+            <td data-label="Date">{{ forecast.date }}</td>
+            <td data-label="Rainfall">{{ forecast.predicted_rainfall|floatformat:2 }}</td>
+            <td data-label="Alert Level">
+              <span class="alert-badge 
+                {% if forecast.alert_level == 'Green' %}green
+                {% elif forecast.alert_level == 'Yellow' %}yellow
+                {% elif forecast.alert_level == 'Orange' %}orange
+                {% else %}red{% endif %}">
+                {{ forecast.alert_level }}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Your Alerts</h2>
+      {% if alerts %}
+        <ul>
+          {% for alert in alerts %}
+            <li><strong>{{ alert.alert_level }}</strong>: {{ alert.message }} ({{ alert.created_at }})</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="no-alert">No alerts available.</p>
+      {% endif %}
+    </div>
+
+    {% comment %} <div class="card">
+      <h2>Rainfall Graph</h2>
+      <canvas id="rainfallChart"></canvas>
+    </div> {% endcomment %}
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const predictButton = document.getElementById("predictButton");
+
+      if (predictButton) {
+        predictButton.addEventListener("click", function () {
+          fetch("{% url 'get_prediction' %}", {
+            method: "GET",
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+              "X-CSRFToken": "{{ csrf_token }}",
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("predictionResult").textContent = 
+  `Predicted Rainfall: ${data.forecast[0].predicted_rainfall.toFixed(2)} mm on ${data.forecast[0].date}`;
+
+document.getElementById("alertMessage").textContent = 
+  `Alert Level: ${data.forecast[0].alert_level}`;
+
+            if (data.success) {
+              const tableBody = document.querySelector("table tbody");
+              tableBody.innerHTML = "";
+              data.forecast.forEach(forecast => {
+                const row = `
+                  <tr>
+                    <td>${forecast.date}</td>
+                    <td>${forecast.predicted_rainfall.toFixed(2)}</td>
+                    <td><span class="alert-badge ${getAlertClass(forecast.alert_level)}">${forecast.alert_level}</span></td>
+                  </tr>`;
+                tableBody.innerHTML += row;
+              });
+
+              updateGraph(data.forecast);
+            } else {
+              alert("Error: " + data.error);
+            }
+          })
+          .catch(error => console.error("Error fetching prediction:", error));
+        });
+      }
+
+      function getAlertClass(level) {
+        if (level === "Green") return "green";
+        if (level === "Yellow") return "yellow";
+        if (level === "Orange") return "orange";
+        return "red";
+      }
+
+      function updateGraph(forecastData) {
+        const ctx = document.getElementById("rainfallChart").getContext("2d");
+        const labels = forecastData.map(f => f.date);
+        const dataPoints = forecastData.map(f => f.predicted_rainfall);
+        const colors = forecastData.map(f => getAlertColor(f.alert_level));
+
+        if (window.myChart) {
+          window.myChart.destroy();
+        }
+
+        window.myChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Predicted Rainfall (mm)",
+              data: dataPoints,
+              backgroundColor: colors,
+              borderColor: "#333",
+              borderWidth: 1,
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 10
+                }
+              }
+            }
+          }
+        });
+      }
+
+      function getAlertColor(level) {
+        if (level === "Green") return "#4caf50";
+        if (level === "Yellow") return "#ffeb3b";
+        if (level === "Orange") return "#ff9800";
+        return "#f44336";
+      }
+    });
+  </script>
 
 </body>
 </html>
